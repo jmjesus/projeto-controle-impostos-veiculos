@@ -6,16 +6,16 @@ public abstract class Veiculo {
     private String modelo;
     private String placa;
     private String uf;
-    private Integer ano;
+    private Integer anoFabricacao;
     private Double valorVenal;
 
 
-    public Veiculo(String cor, String modelo, String placa, String uf, Integer ano, Double valorVenal) {
+    public Veiculo(String cor, String modelo, String placa, String uf, Integer anoFabricacao, Double valorVenal) {
         this.cor = cor;
         this.modelo = modelo;
         this.placa = placa;
         this.uf = uf;
-        this.ano = ano;
+        this.anoFabricacao = anoFabricacao;
         this.valorVenal = valorVenal;
     }
 
@@ -37,23 +37,11 @@ public abstract class Veiculo {
         return uf;
     }
 
-    public Integer getAno() {
-        return ano;
+    public Integer getAnoFabricacao() {
+        return anoFabricacao;
     }
 
     public Double getValorVenal() {
         return valorVenal;
-    }
-
-    @Override
-    public String toString() {
-        return "Veiculo{" +
-                "cor='" + cor + '\'' +
-                ", modelo='" + modelo + '\'' +
-                ", placa='" + placa + '\'' +
-                ", uf='" + uf + '\'' +
-                ", ano=" + ano +
-                ", valorVenal=" + valorVenal +
-                '}';
     }
 }

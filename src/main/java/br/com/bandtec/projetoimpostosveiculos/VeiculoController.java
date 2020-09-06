@@ -1,5 +1,7 @@
 package br.com.bandtec.projetoimpostosveiculos;
 
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -26,25 +28,37 @@ public class VeiculoController {
     }
 
     @GetMapping("/{tipoVeiculo}")
-    public List<Veiculo> buscarVeiculosEspecificos(@PathVariable String tipoVeiculo) {
+    public ResponseEntity buscarVeiculosEspecificos(@PathVariable String tipoVeiculo) {
         listaFiltrada = new ArrayList<>();
 
-        for (Veiculo v : veiculos) {
-            if (tipoVeiculo.equals("carros") && v instanceof Carro) {
-                listaFiltrada.add(v);
-            } else if (tipoVeiculo.equals("motos") && v instanceof Moto) {
-                listaFiltrada.add(v);
-            } else if (tipoVeiculo.equals("caminhoes") && v instanceof Caminhao) {
-                listaFiltrada.add(v);
+        if (tipoVeiculo.equals("carros") || tipoVeiculo.equals("motos") || tipoVeiculo.equals("caminhoes")) {
+            for (Veiculo v : veiculos) {
+                if (tipoVeiculo.equals("carros") && v instanceof Carro) {
+                    listaFiltrada.add(v);
+                } else if (tipoVeiculo.equals("motos") && v instanceof Moto) {
+                    listaFiltrada.add(v);
+                } else if (tipoVeiculo.equals("caminhoes") && v instanceof Caminhao) {
+                    listaFiltrada.add(v);
+                }
             }
-        }
 
-        return listaFiltrada;
+            if (listaFiltrada.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(listaFiltrada);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
-    public List<Veiculo> listarVeiculos() {
-        return veiculos;
+    public ResponseEntity listarVeiculos() {
+        if (veiculos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(veiculos);
+        }
     }
 
 //    @GetMapping("/{id}")
@@ -53,22 +67,30 @@ public class VeiculoController {
 //    }
 
     @PostMapping("/carros")
-    public void registrarCarro(@RequestBody Carro c) {
+    public ResponseEntity registrarCarro(@RequestBody Carro c) {
         veiculos.add(c);
+        return ResponseEntity.created(null).build();
     }
 
     @PostMapping("/motos")
-    public void registrarMoto(@RequestBody Moto m) {
+    public ResponseEntity registrarMoto(@RequestBody Moto m) {
         veiculos.add(m);
+        return ResponseEntity.created(null).build();
     }
 
     @PostMapping("/caminhoes")
-    public void registrarCaminhao(@RequestBody Caminhao c) {
+    public ResponseEntity registrarCaminhao(@RequestBody Caminhao c) {
         veiculos.add(c);
+        return ResponseEntity.created(null).build();
     }
 
     @DeleteMapping("/{id}")
-    public void deletarVeiculo(@PathVariable int id) {
-        veiculos.remove(id-1);
+    public ResponseEntity deletarVeiculo(@PathVariable int id) {
+        if (veiculos.size() >= id) {
+            veiculos.remove(id-1);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
